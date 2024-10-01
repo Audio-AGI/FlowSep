@@ -1,0 +1,12 @@
+{
+    "metadata":{
+        "path": {
+            "audiocaps":{
+                "train":"metadata-master/processed/audiocaps_train.json",
+                "test":"metadata-master/processed/audiocaps_test.json",
+                "val":"metadata-master/processed/audiocaps_eval.json",
+                "class_label_indices": "metadata-master/processed/class_labels_indices.csv"
+            }
+        }
+    }
+}

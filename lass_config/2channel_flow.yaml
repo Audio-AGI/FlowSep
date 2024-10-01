@@ -1,0 +1,137 @@
+metadata_root: "metadata-master/processed/dataset_root.json"
+log_directory: "model_logs"
+exp_group: "lass"
+exp_name: "2channel_flow"
+project: "FlowSep"
+
+# reload_from_ckpt: "the checkpoint for pretrain"
+# pretrained_ckpt:  "v2_100k.ckpt"
+
+data: 
+  train: ["audiocaps"]
+  val: "audiocaps"
+  test: "audiocaps"
+  mix_train: "train"
+  class_label_indices: "audiocaps"
+  dataloader_add_ons: []
+  mix_audio: true
+  random_empty: 0.0001  # 0.00001
+
+step:
+  validation_every_n_epochs: 1
+  save_checkpoint_every_n_steps: 100000
+  max_steps: 4000000
+  save_top_k: 4
+
+preprocessing:
+  audio:
+    sampling_rate: 16000
+    max_wav_value: 32768.0
+    duration: 10.24
+  stft:
+    filter_length: 1024
+    hop_length: 160
+    win_length: 1024
+  mel:
+    n_mel_channels: 64
+    mel_fmin: 0
+    mel_fmax: 8000 
+
+augmentation:
+  mixup: 0.0
+
+model:
+  target: latent_diffusion.models.ddpm_flow.LatentDiffusion
+  params:
+    base_learning_rate: 5.0e-05
+    sampling_rate: 16000
+    batchsize: 4
+    linear_start: 0.0015
+    linear_end: 0.0195
+    num_timesteps_cond: 1
+    log_every_t: 200
+    timesteps: 1000
+    unconditional_prob_cfg: 0.1
+    parameterization: eps # [eps, x0, v]
+    first_stage_key: fbank
+    latent_t_size: 256 # TODO might need to change
+    latent_f_size: 16
+    channels: 8 # TODO might need to change
+    extra_channels: true
+    extra_channel_key: mixed_mel
+    monitor: val/loss_simple_ema
+    scale_by_std: true
+    clap_trainable: false
+    retrival_num: 0
+    use_clap: false
+    euler: true
+    unet_config:
+      target: latent_diffusion.modules.diffusionmodules.openaimodel.UNetModel
+      params:
+        image_size: 64 # Ignore this parameter
+        context_dim: 
+        - 1024
+        in_channels: 16 # The input channel of the UNet model
+        out_channels: 16 # TODO might need to change
+        model_channels: 128 # TODO might need to change
+        attention_resolutions:
+        - 8
+        - 4
+        - 2
+        num_res_blocks: 2
+        channel_mult:
+        - 1
+        - 2
+        - 3
+        - 5
+        num_head_channels: 32
+        use_spatial_transformer: true
+        transformer_depth: 1
+    first_stage_config:
+      base_learning_rate: 4.5e-05
+      target: latent_encoder.autoencoder.AutoencoderKL
+      params:
+        reload_from_ckpt: "model_logs/pretrained/vae.ckpt"
+        batchsize: 2
+        monitor: val/rec_loss
+        image_key: fbank
+        subband: 1
+        embed_dim: 8
+        time_shuffle: 1
+        lossconfig:
+          target: latent_diffusion.modules.losses.LPIPSWithDiscriminator
+          params:
+            disc_start: 50001
+            kl_weight: 1.0
+            disc_weight: 0.5
+            disc_in_channels: 1
+        ddconfig:
+          double_z: true
+          z_channels: 8
+          resolution: 256
+          mel_bins: 64
+          downsample_time: false
+          in_channels: 1
+          out_ch: 1
+          ch: 128
+          ch_mult:
+          - 1
+          - 2
+          - 4
+          num_res_blocks: 2
+          attn_resolutions: []
+          dropout: 0.0
+    cond_stage_config:
+      crossattn_text:
+        cond_stage_key: caption
+        conditioning_key: crossattn
+        target: latent_diffusion.modules.encoders.modules.FlanT5HiddenState
+        params:
+          emb_num: 1
+          input_caption: true
+
+
+    evaluation_params:
+      unconditional_guidance_scale: 1.0 # 
+      ddim_sampling_steps: 10
+      n_candidates_per_samples: 1
