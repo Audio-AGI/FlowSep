@@ -465,6 +465,14 @@ class DDPM(pl.LightningModule):
 
 
         return super().on_validation_epoch_start()
+    
+    def on_train_epoch_start(self, *args, **kwargs):
+        print("Log directory: ", self.get_log_dir())
+
+    def on_train_batch_end(self, *args, **kwargs):
+        # Does this affect speed?
+        if self.use_ema:
+            self.model_ema(self.model)
 
     @torch.no_grad()
     def validation_step(self, batch, batch_idx):
