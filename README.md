@@ -62,7 +62,7 @@ To evaluate the model, setup the 'pretrained_ckpt' under config file and simply 
   python3 val_latent_diffusion.py 
   ```
 
-## Evaluation(Coming soon)
+## Evaluation (Coming soon)
 
 
 
