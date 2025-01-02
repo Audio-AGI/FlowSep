@@ -71,10 +71,10 @@ To evaluate the model, setup the 'pretrained_ckpt' under config file and simply 
 
 If you found this tool useful, please consider citing
 ```bibtex
-@article{yuan2024flowsep,
+@inproceedings{yuan2024flowsep,
   title={FlowSep: Language-Queried Sound Separation with Rectified Flow Matching},
   author={Yuan, Yi and Liu, Xubo and Liu, Haohe and Plumbley, Mark D and Wang, Wenwu},
-  journal={arXiv preprint arXiv:2409.07614},
+  booktitle = {IEEE International Conference on Acoustic, Speech and Signal Procssing (ICASSP)},
   year={2024}
 }
 ```
