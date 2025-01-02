@@ -2,7 +2,7 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2409.07614-brightgreen.svg?style=flat-square)](https://arxiv.org/abs/2409.07614)  [![githubio](https://img.shields.io/badge/GitHub.io-Audio_Samples-blue?logo=Github&style=flat-square)](https://audio-agi.github.io/FlowSep_demo/)  [![DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.13869711-blue)](https://zenodo.org/records/13869712)
 
 
-This repository contains the official implementation of ["FlowSep: Language-Queried Sound Separation with Rectified Flow Matching"](https://arxiv.org/abs/2409.07614).
+This repository contains the official implementation of ["FlowSep: Language-Queried Sound Separation with Rectified Flow Matching"](https://arxiv.org/abs/2409.07614) (ICASSP 2025).
 
 We introduce FlowSep, a novel generative model based on Rectified Flow Matching for language-queried sound seperation tasks. Specifically, FlowSep learns linear flow trajectories from Gaussian noise to the target source features within a pre-trained latent space. During inference, the mel-spectrogram can be reconstructed from the generated latent vector. FlowSep outperforms SoTA models across multiple benchmarks, check out the separated audio examples on the [Demo Page](https://audio-agi.github.io/FlowSep_demo/)!
 
